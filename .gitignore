@@ -41,3 +41,6 @@ build/
 ### Local database (contains user data) ###
 database/*.db
 .idea/dataSources.xml
+
+### IntelliJ IDEA project folder ###
+.idea/

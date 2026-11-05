@@ -2,19 +2,33 @@
 
 A desktop CRM for small law firms, written in Java 21 with JavaFX and SQLite. It manages clients, legal cases, tasks and a hearings/deadlines agenda, with role-based access for administrators, lawyers and interns. The UI and data model are in Portuguese (Portugal).
 
+## Screenshots
+
+<!-- Add the image files to the img/ folder; the links below will then render. -->
+
+| Login | Clients | Cases |
+|---|---|---|
+| ![Login screen](img/login.png) | ![Clients view](img/clients.png) | ![Cases view](img/cases.png) |
+
 ## What it does
 
-- **Authentication** – username/password login; passwords are stored as SHA-256 hashes. Deactivated users cannot log in.
-- **Three roles** (`NivelAcesso`), each with its own JavaFX screen:
-  - **Administrator** – manages users (create lawyers, interns and admins; edit; activate/deactivate), clients, cases, tasks and agenda.
-  - **Lawyer** – dashboard, clients, cases, tasks and agenda; can add and edit records.
-  - **Intern** – dashboard plus clients, cases, tasks and agenda, with search and filters (mostly read-oriented).
-- **Clients** – individual/company records (name, address, phone, email, NIF, type); soft-delete via active/inactive.
-- **Cases (processos)** – case number, action name, status, distribution/closing dates, linked to a client and a responsible lawyer.
-- **Tasks** – title, description, priority, status, due date, linked to a case and a responsible user.
-- **Agenda** – hearings/appointments with location, date/time and status, linked to a case and a user.
-- **Persistence** – local SQLite file (`database/crm.db`); tables are created automatically by the console entry point.
-- **Two front ends** – a JavaFX GUI (`MainFX`) and a text-based console app (`viewConsola.Main`) sharing the same controller and DAO layer.
+- **Authentication** – username/password login (GUI and console). Passwords are stored as SHA-256 hashes; deactivated users cannot log in.
+- **Three roles** (`NivelAcesso`): administrator, lawyer and intern. The GUI opens a different screen for each role.
+- **Console app (full management)** – a text menu (`viewConsola.Main`) is where records are actually created and changed:
+  - Administrators: manage users (create administrators, lawyers and interns; edit; activate/deactivate), plus clients, cases, tasks and agenda.
+  - Lawyers and interns: clients, cases, tasks and agenda.
+  - Every user can change their own password.
+  - On first run it creates the tables and a default administrator if the database is empty.
+- **JavaFX GUI (browsing)** – dashboard plus clients, cases, tasks and agenda views with search and status filters, and logout.
+  - Administrators can also view users and activate/deactivate users and clients.
+  - Lawyers see their own cases, tasks and agenda.
+  - The "add" and "edit" buttons in the GUI are placeholders that only show an "under development" message.
+- **Data model**
+  - **Clients** – name, address, phone, e-mail, NIF (tax number), type (individual or company), active/inactive.
+  - **Cases (processos)** – case number, action name, status, distribution/closing dates, linked to a client and a lawyer. Status changes follow allowed transitions (e.g. an archived case cannot be reopened).
+  - **Tasks** – title, description, priority, status, due date, linked to a case and a responsible user.
+  - **Agenda** – title, location, date/time and status, linked to a case and a user.
+- **Persistence** – a local SQLite file (`database/crm.db`), accessed through a DAO layer shared by both front ends.
 
 ## Limitations
 
@@ -25,7 +39,7 @@ A desktop CRM for small law firms, written in Java 21 with JavaFX and SQLite. It
 - No automated tests (there is no `src/test`).
 - No password recovery, user self-registration, or audit log.
 - Passwords are hashed with plain, unsalted SHA-256 (`Hash.java`). This is for **educational purposes only** and is not adequate for production; a real deployment needs a salted, slow hash (bcrypt, Argon2, PBKDF2) and a changed default admin password.
-- The GUI does not create the database schema or the initial admin by itself (see Getting started).
+- The GUI is mostly read-only: creating and editing records is only possible in the console app (see above), and the GUI does not create the database schema or the initial admin by itself (see Getting started).
 - No internationalisation: the interface is Portuguese only.
 
 ## Requirements
@@ -55,7 +69,6 @@ Change this password after the first login.
 With the `sqlite3` CLI:
 
 ```bash
-mkdir -p database
 sqlite3 database/crm.db < database/seed.sql
 ```
 
@@ -78,10 +91,11 @@ Demo login: **`admin` / `1234`** (the same documented test password is used for 
 
 > NIFs and phone numbers are stored as integers, so leading zeros are dropped (`000000001` is stored as `1`).
 
-### Launch the GUI
+### Build and launch the GUI
 
 ```bash
-./mvnw javafx:run
+./mvnw clean compile   # build
+./mvnw javafx:run         # launch the GUI (login screen)
 ```
 
 The GUI does not create the schema or the initial admin by itself, so create the database first (Option A or B).
