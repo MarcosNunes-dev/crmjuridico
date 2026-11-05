@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="crmjuridico.viewGUI.AdvogadoController">
+
+    <left>
+        <VBox prefWidth="220" spacing="5" style="-fx-background-color: #2C3E50;">
+            <padding><Insets top="25" bottom="25" left="15" right="15"/></padding>
+            <children>
+                <Label text="CRM Jurídico" style="-fx-text-fill: white; -fx-font-weight: bold;">
+                    <font><Font size="20.0"/></font>
+                </Label>
+                <Label fx:id="nomeUtilizadorLabel" text="" style="-fx-text-fill: #BDC3C7;">
+                    <font><Font size="12.0"/></font>
+                    <VBox.margin><Insets bottom="10"/></VBox.margin>
+                </Label>
+                <Separator style="-fx-background-color: #34495E;">
+                    <VBox.margin><Insets bottom="10"/></VBox.margin>
+                </Separator>
+                <Button fx:id="btnDashboard" text="🏠  Dashboard" maxWidth="Infinity"
+                        onAction="#mostrarDashboard"
+                        style="-fx-background-color: transparent; -fx-text-fill: #BDC3C7; -fx-font-size: 13px; -fx-alignment: CENTER-LEFT; -fx-padding: 10 15 10 15; -fx-cursor: hand; -fx-background-radius: 5;"/>
+                <Button fx:id="btnClientes" text="🏢  Clientes" maxWidth="Infinity"
+                        onAction="#mostrarClientes"
+                        style="-fx-background-color: transparent; -fx-text-fill: #BDC3C7; -fx-font-size: 13px; -fx-alignment: CENTER-LEFT; -fx-padding: 10 15 10 15; -fx-cursor: hand; -fx-background-radius: 5;"/>
+                <Button fx:id="btnProcessos" text="⚖️  Processos" maxWidth="Infinity"
+                        onAction="#mostrarProcessos"
+                        style="-fx-background-color: transparent; -fx-text-fill: #BDC3C7; -fx-font-size: 13px; -fx-alignment: CENTER-LEFT; -fx-padding: 10 15 10 15; -fx-cursor: hand; -fx-background-radius: 5;"/>
+                <Button fx:id="btnTarefas" text="📋  Tarefas" maxWidth="Infinity"
+                        onAction="#mostrarTarefas"
+                        style="-fx-background-color: transparent; -fx-text-fill: #BDC3C7; -fx-font-size: 13px; -fx-alignment: CENTER-LEFT; -fx-padding: 10 15 10 15; -fx-cursor: hand; -fx-background-radius: 5;"/>
+                <Button fx:id="btnAgenda" text="📅  Agenda" maxWidth="Infinity"
+                        onAction="#mostrarAgenda"
+                        style="-fx-background-color: transparent; -fx-text-fill: #BDC3C7; -fx-font-size: 13px; -fx-alignment: CENTER-LEFT; -fx-padding: 10 15 10 15; -fx-cursor: hand; -fx-background-radius: 5;"/>
+                <Region VBox.vgrow="ALWAYS"/>
+                <Button text="🚪  Logout" maxWidth="Infinity"
+                        onAction="#handleLogout"
+                        style="-fx-background-color: #E74C3C; -fx-text-fill: white; -fx-font-size: 13px; -fx-padding: 10 15 10 15; -fx-cursor: hand; -fx-background-radius: 5;"/>
+            </children>
+        </VBox>
+    </left>
+
+    <center>
+        <VBox style="-fx-background-color: #F5F6FA;">
+            <padding><Insets top="25" bottom="25" left="30" right="30"/></padding>
+            <children>
+
+
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <children>
+                        <Label fx:id="tituloSecao" text="Dashboard"
+                               style="-fx-font-weight: bold; -fx-text-fill: #2C3E50;">
+                            <font><Font size="24.0"/></font>
+                        </Label>
+                        <Region HBox.hgrow="ALWAYS"/>
+                        <Button fx:id="btnAdicionar" text="+ Adicionar" onAction="#handleAdicionar"
+                                visible="false"
+                                style="-fx-background-color: #27AE60; -fx-text-fill: white; -fx-font-size: 13px; -fx-padding: 8 15 8 15; -fx-cursor: hand; -fx-background-radius: 5;"/>
+                        <Button fx:id="btnEditar" text="✏  Editar" onAction="#handleEditar"
+                                visible="false"
+                                style="-fx-background-color: #2980B9; -fx-text-fill: white; -fx-font-size: 13px; -fx-padding: 8 15 8 15; -fx-cursor: hand; -fx-background-radius: 5;"/>
+                    </children>
+                    <VBox.margin><Insets bottom="15"/></VBox.margin>
+                </HBox>
+
+                <FlowPane fx:id="dashboardPane" hgap="15" vgap="15">
+                    <children>
+                        <VBox prefWidth="180" prefHeight="100" alignment="CENTER" spacing="5"
+                              style="-fx-background-color: white; -fx-background-radius: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
+                            <padding><Insets top="15" bottom="15" left="15" right="15"/></padding>
+                            <children>
+                                <Label text="⚖️ Meus Processos" style="-fx-text-fill: #7F8C8D; -fx-font-size: 12px;"/>
+                                <Label fx:id="cardProcessos" text="0" style="-fx-font-weight: bold; -fx-text-fill: #2980B9; -fx-font-size: 28px;"/>
+                                <Label text="em curso" style="-fx-text-fill: #BDC3C7; -fx-font-size: 11px;"/>
+                            </children>
+                        </VBox>
+                        <VBox prefWidth="180" prefHeight="100" alignment="CENTER" spacing="5"
+                              style="-fx-background-color: white; -fx-background-radius: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
+                            <padding><Insets top="15" bottom="15" left="15" right="15"/></padding>
+                            <children>
+                                <Label text="📋 Minhas Tarefas" style="-fx-text-fill: #7F8C8D; -fx-font-size: 12px;"/>
+                                <Label fx:id="cardTarefas" text="0" style="-fx-font-weight: bold; -fx-text-fill: #E67E22; -fx-font-size: 28px;"/>
+                                <Label text="pendentes" style="-fx-text-fill: #BDC3C7; -fx-font-size: 11px;"/>
+                            </children>
+                        </VBox>
+                        <VBox prefWidth="180" prefHeight="100" alignment="CENTER" spacing="5"
+                              style="-fx-background-color: white; -fx-background-radius: 8; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
+                            <padding><Insets top="15" bottom="15" left="15" right="15"/></padding>
+                            <children>
+                                <Label text="📅 Minha Agenda" style="-fx-text-fill: #7F8C8D; -fx-font-size: 12px;"/>
+                                <Label fx:id="cardAgenda" text="0" style="-fx-font-weight: bold; -fx-text-fill: #8E44AD; -fx-font-size: 28px;"/>
+                                <Label text="agendados" style="-fx-text-fill: #BDC3C7; -fx-font-size: 11px;"/>
+                            </children>
+                        </VBox>
+                    </children>
+                    <VBox.margin><Insets bottom="20"/></VBox.margin>
+                </FlowPane>
+
+                <HBox fx:id="filtroEstadoPane" spacing="10" visible="false" alignment="CENTER_LEFT">
+                    <children>
+                        <Label text="Estado:" style="-fx-text-fill: #2C3E50; -fx-font-size: 13px;"/>
+                        <ComboBox fx:id="comboEstado" onAction="#handleFiltroEstado"
+                                  style="-fx-background-color: white; -fx-border-color: #E0E0E0; -fx-border-radius: 5; -fx-background-radius: 5;"/>
+                    </children>
+                    <VBox.margin><Insets bottom="10"/></VBox.margin>
+                </HBox>
+
+                <HBox fx:id="painelPesquisa" spacing="10" visible="false" alignment="CENTER_LEFT">
+                    <children>
+                        <Label text="Pesquisar:" style="-fx-text-fill: #2C3E50; -fx-font-size: 13px;"/>
+                        <ComboBox fx:id="comboPesquisa"
+                                  style="-fx-background-color: white; -fx-border-color: #E0E0E0; -fx-border-radius: 5; -fx-background-radius: 5;"/>
+                        <TextField fx:id="campoPesquisa" promptText="Introduza o valor..."
+                                   prefWidth="220"
+                                   style="-fx-background-color: white; -fx-border-color: #E0E0E0; -fx-border-radius: 5; -fx-background-radius: 5; -fx-padding: 8;"/>
+                        <Button text="🔍 Pesquisar" onAction="#handlePesquisar"
+                                style="-fx-background-color: #2C3E50; -fx-text-fill: white; -fx-padding: 8 15 8 15; -fx-cursor: hand; -fx-background-radius: 5;"/>
+                        <Button fx:id="btnLimpar" text="✖ Limpar" onAction="#handleLimparPesquisa"
+                                style="-fx-background-color: #95A5A6; -fx-text-fill: white; -fx-padding: 8 15 8 15; -fx-cursor: hand; -fx-background-radius: 5;"/>
+                    </children>
+                    <VBox.margin><Insets bottom="10"/></VBox.margin>
+                </HBox>
+
+                <TableView fx:id="tabela" VBox.vgrow="ALWAYS" visible="false"
+                           style="-fx-background-color: white; -fx-border-color: #E0E0E0; -fx-border-radius: 5;"/>
+
+            </children>
+        </VBox>
+    </center>
+
+</BorderPane>
