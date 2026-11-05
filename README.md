@@ -16,7 +16,7 @@ A desktop CRM for small law firms, written in Java 21 with JavaFX and SQLite. It
 - **Persistence** – local SQLite file (`database/crm.db`); tables are created automatically by the console entry point.
 - **Two front ends** – a JavaFX GUI (`MainFX`) and a text-based console app (`viewConsola.Main`) sharing the same controller and DAO layer.
 
-## What it does NOT do
+## Limitations
 
 - No web or multi-user/networked mode: it is a single-machine app on a local SQLite file, with no server, sync or concurrent-access handling.
 - No document management (no file upload, templates, or generated contracts/powers of attorney).
@@ -24,8 +24,8 @@ A desktop CRM for small law firms, written in Java 21 with JavaFX and SQLite. It
 - No integration with court systems (e.g. PJe), e-mail, calendars or notifications/reminders.
 - No automated tests (there is no `src/test`).
 - No password recovery, user self-registration, or audit log.
-- Passwords use plain unsalted SHA-256, which is **not** adequate for production use; the default admin credentials must be changed.
-- The GUI does not create the database schema or the initial admin by itself (see below).
+- Passwords are hashed with plain, unsalted SHA-256 (`Hash.java`). This is for **educational purposes only** and is not adequate for production; a real deployment needs a salted, slow hash (bcrypt, Argon2, PBKDF2) and a changed default admin password.
+- The GUI does not create the database schema or the initial admin by itself (see Getting started).
 - No internationalisation: the interface is Portuguese only.
 
 ## Requirements
@@ -35,24 +35,56 @@ A desktop CRM for small law firms, written in Java 21 with JavaFX and SQLite. It
 
 ## Getting started
 
-1. **Initialise the database** by running the console app once. It creates the tables and, if the database is empty, a default administrator:
+The app stores everything in `database/crm.db` (a relative path, so always run from the project root). The database file is git-ignored; create it with **one** of the options below.
 
-   ```
-   username: admin
-   password: 1234
-   ```
+### Option A – Empty database (console app)
 
-   Change this password after the first login.
+Run `crmjuridico.viewConsola.Main` from your IDE (not yet wired to a Maven goal). It creates the tables and, if the database is empty, a default administrator:
 
-   Run `crmjuridico.viewConsola.Main` from your IDE (not yet wired to a Maven goal).
+```
+username: admin
+password: 1234
+```
 
-2. **Launch the GUI:**
+Change this password after the first login.
 
-   ```bash
-   ./mvnw javafx:run
-   ```
+### Option B – Sample data (`database/seed.sql`)
 
-   The database path is relative (`database/crm.db`), so always run from the project root.
+`database/seed.sql` creates the schema and loads **entirely fictitious** data: 5 users, 8 clients, 8 cases, 10 tasks and 8 agenda entries (e.g. "Cliente Exemplo 01", NIF `000000001`, phone `900000001`, `cliente01@exemplo.com`, case `EXEMPLO-0001/2025`). It must be loaded into a **new, empty** database, because it uses fixed IDs and unique NIFs/usernames.
+
+With the `sqlite3` CLI:
+
+```bash
+mkdir -p database
+sqlite3 database/crm.db < database/seed.sql
+```
+
+Without it, using Python (3.x):
+
+```bash
+python -c "import sqlite3; sqlite3.connect('database/crm.db').executescript(open('database/seed.sql', encoding='utf-8').read())"
+```
+
+To start over, delete `database/crm.db` and run the command again.
+
+Demo login: **`admin` / `1234`** (the same documented test password is used for every sample user; their hashes were generated with the project's own `Hash.sha256`):
+
+| Username | Role |
+|---|---|
+| `admin` | Administrator |
+| `advogado01`, `advogado02` | Lawyer |
+| `estagiario01` | Intern |
+| `estagiario02` | Intern (deactivated – cannot log in) |
+
+> NIFs and phone numbers are stored as integers, so leading zeros are dropped (`000000001` is stored as `1`).
+
+### Launch the GUI
+
+```bash
+./mvnw javafx:run
+```
+
+The GUI does not create the schema or the initial admin by itself, so create the database first (Option A or B).
 
 ## Project structure
 
